@@ -31,4 +31,4 @@ jobs:
         run: dotnet format --verify-no-changes
 
       - name: build
-        run: dotnet build --Configuration Release
+        run: dotnet build --configuration Release
