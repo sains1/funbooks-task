@@ -19,7 +19,7 @@ public class ProductRepositoryTests : IAsyncLifetime, IClassFixture<OrderingDbCo
     }
 
     [Theory, AutoData]
-    public async Task WhenProductExists_ShouldReturnProduct(Fixture fixture)
+    public async Task GetProductOrNullAsync_WhenProductExists_ShouldReturnProduct(Fixture fixture)
     {
         // arrange
         var dbContext = _fixture.GetScopedDbContext();
@@ -37,7 +37,7 @@ public class ProductRepositoryTests : IAsyncLifetime, IClassFixture<OrderingDbCo
     }
 
     [Theory, AutoData]
-    public async Task WhenProductNotExists_ShouldReturnNull(Fixture fixture)
+    public async Task GetProductOrNullAsync_WhenProductNotExists_ShouldReturnNull(Fixture fixture)
     {
         // arrange
         var product = fixture.Build<Product>().Without(x => x.ProductId).Without(x => x.CreatedAt).Create();
@@ -47,6 +47,43 @@ public class ProductRepositoryTests : IAsyncLifetime, IClassFixture<OrderingDbCo
 
         // assert
         Assert.Null(result);
+    }
+
+
+    [Theory, AutoData]
+    public async Task GetProductsByIdBulkAsync_WhenProductsExists_ShouldReturnProducts(Fixture fixture)
+    {
+        // arrange
+        var dbContext = _fixture.GetScopedDbContext();
+
+        var products = fixture.Build<Product>().Without(x => x.ProductId).Without(x => x.CreatedAt).CreateMany(5);
+        dbContext.Products.AddRange(products);
+
+        Assert.Equal(5, await dbContext.SaveChangesAsync());
+
+        // act
+        var result = await _sut.GetProductsByIdBulkAsync(products.Select(x => x.ProductId));
+
+        // assert
+        Assert.Equivalent(products, result);
+    }
+
+    [Theory, AutoData]
+    public async Task GetProductsByIdBulkAsync_WhenProductsNotExist_ShouldReturnEmptyCollection(Fixture fixture)
+    {
+        // arrange
+        var dbContext = _fixture.GetScopedDbContext();
+
+        var products = fixture.Build<Product>().Without(x => x.ProductId).Without(x => x.CreatedAt).CreateMany(5);
+        dbContext.Products.AddRange(products);
+
+        Assert.Equal(5, await dbContext.SaveChangesAsync());
+
+        // act
+        var result = await _sut.GetProductsByIdBulkAsync(new List<Guid> { Guid.NewGuid() });
+
+        // assert
+        Assert.Empty(result);
     }
 
 

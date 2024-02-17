@@ -51,6 +51,11 @@ public class PurchaseOrderController : ControllerBase
             {
                 validation.AddToModelState(ModelState);
                 return BadRequest(ModelState);
+            },
+            missing =>
+            {
+                ModelState.AddModelError(nameof(body.LineItems), "One of more products were missing");
+                return BadRequest(ModelState);
             });
     }
 

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 using OrderingService.Application.Products;
 using OrderingService.Application.Products.GetProduct;
+using OrderingService.Application.PurchaseOrders;
 using OrderingService.Application.PurchaseOrders.SubmitPurchaseOrder;
 using OrderingService.Infrastructure;
 using OrderingService.Infrastructure.Repositories;
@@ -13,6 +14,8 @@ using OrderingService.Infrastructure.WorkflowInvocations;
 
 using SharedKernel.OpenApi;
 using SharedKernel.Temporal;
+
+using Temporalio.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +25,6 @@ builder.AddServiceDefaults();
 builder.Services.AddProblemDetails();
 builder.Services.AddOpenApiServices(Assembly.GetExecutingAssembly());
 builder.Services.AddControllers();
-builder.Services.AddConfiguredTemporalClient(builder.Configuration);
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 // app handlers (this could use Assembly scanning, or a library like Mediatr)
@@ -35,10 +37,16 @@ builder.Services.AddDbContext<OrderingDbContext>(options =>
 
 // repositories
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
 
 // workflow clients
 builder.Services.AddScoped<IPurchaseOrderProcessorWorkflowClient, PurchaseOrderProcessorWorkflowClient>();
 
+// temporal
+builder.Services.AddConfiguredTemporalClient(builder.Configuration);
+builder.Services.AddHostedTemporalWorker(TemporalConstants.OrderingServiceTaskQueue)
+    .AddWorkflow<PurchaseOrderProcessorWorkflow>()
+    .AddScopedActivities<PurchaseOrderProcessorActivities>();
 
 var app = builder.Build();
 
