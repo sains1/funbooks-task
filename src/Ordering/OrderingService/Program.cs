@@ -1,13 +1,18 @@
 using System.Reflection;
 
+using FluentValidation;
+
 using Microsoft.EntityFrameworkCore;
 
 using OrderingService.Application.Products;
 using OrderingService.Application.Products.GetProduct;
+using OrderingService.Application.PurchaseOrders.SubmitPurchaseOrder;
 using OrderingService.Infrastructure;
 using OrderingService.Infrastructure.Repositories;
+using OrderingService.Infrastructure.WorkflowInvocations;
 
 using SharedKernel.OpenApi;
+using SharedKernel.Temporal;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,15 +22,23 @@ builder.AddServiceDefaults();
 builder.Services.AddProblemDetails();
 builder.Services.AddOpenApiServices(Assembly.GetExecutingAssembly());
 builder.Services.AddControllers();
+builder.Services.AddConfiguredTemporalClient(builder.Configuration);
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 // app handlers (this could use Assembly scanning, or a library like Mediatr)
 builder.Services.AddScoped<GetProductHandler>();
+builder.Services.AddScoped<SubmitPurchaseOrderHandler>();
 
-// data layer
+// infra layer
 builder.Services.AddDbContext<OrderingDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("OrderingDb"), np => np.EnableRetryOnFailure()));
 
+// repositories
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+// workflow clients
+builder.Services.AddScoped<IPurchaseOrderProcessorWorkflowClient, PurchaseOrderProcessorWorkflowClient>();
+
 
 var app = builder.Build();
 
