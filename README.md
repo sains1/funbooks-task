@@ -17,3 +17,16 @@ Each service has a mini onion-architecture within a single project
 - `Application`: Contains application features & use-cases
 - `Domain`: Contains domain models
 - `Infrastructure`: Contains infra level concerns (e.g. Database queries & migrations)
+
+Each service also has a Test Project, which contains a mix of UnitTest and Integration tests
+
+For example:
+
+1. Db Integration Tests using PostgresSql container TestContainers
+
+- [ProductRepositoryTests.cs](./src/Ordering/OrderingService.Tests/Infrastructure/Repositories/ProductRepositoryTests.cs)
+- [OrderingDbContextFixture.cs](./src/Ordering/OrderingService.Tests/Setup/OrderingDbContextFixture.cs) (test setup)
+
+2. Basic UnitTests using XUnit, NSubsitute (mocking)
+
+- [GetProductHandlerTests.cs](./src/Ordering/OrderingService.Tests/Application/Products/GetProduct/GetProductHandlerTests.cs)
