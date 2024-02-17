@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: pr
+on:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: install dotnet
+        uses: actions/setup-dotnet@v4
+
+      - name: format check
+        run: dotnet format --verify-no-changes
+
+      - name: restore
+        run: dotnet restore
+
+      - name: build
+        run: dotnet build --Configuration Release
