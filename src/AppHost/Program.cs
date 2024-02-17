@@ -11,6 +11,8 @@ var db = builder.AddPostgresContainer("db", 5432, "postgres")
 builder.AddProject<Projects.OrderingService>("orderingservice")
     .WithReference(db);
 
+builder.AddProject<Projects.ShippingService>("shippingservice");
+
 builder.Build().Run();
 
 // recurse up the file tree until we find the solution file

@@ -1,6 +1,10 @@
 ﻿using OrderingService.Application.SubmitPurchaseOrder;
 using OrderingService.Domain;
 
+using SharedKernel.Temporal;
+
+using ShippingService.Application.ProductShipping;
+
 using Temporalio.Exceptions;
 using Temporalio.Workflows;
 
@@ -50,6 +54,27 @@ public class PurchaseOrderProcessorWorkflow
             {
                 StartToCloseTimeout = TimeSpan.FromSeconds(10)
             });
+
+
+        // Business rule 1: if there are any physical products, we need to ship them
+        if (products.Any(x => x.Type == ProductType.Physical))
+        {
+            var quantities = command.LineItems.ToDictionary(x => x.ProductId, x => x.Quantity);
+            await Workflow.StartChildWorkflowAsync(
+                (IProductShippingWorkflow wf) => wf.ShipAsync(new ProductShippingWorkflowArgs
+                {
+                    CustomerId = command.CustomerId,
+                    PurchaseOrderNumber = command.PurchaseOrderNumber,
+                    ShippingLineItems =
+                        products.Select(x => new ShippingLineItem { ProductId = x.ProductId, ProductName = x.ProductName, Quantity = quantities[x.ProductId] }).ToList(),
+                }),
+                new ChildWorkflowOptions
+                {
+                    Id = IProductShippingWorkflow.WfId(command.CustomerId, command.PurchaseOrderNumber),
+                    TaskQueue = TemporalConstants.ShippingServiceTaskQueue,
+                    ParentClosePolicy = ParentClosePolicy.Abandon // shipping runs async, no need to wait
+                });
+        }
 
 
         return new SubmitPurchaseOrderSuccess
