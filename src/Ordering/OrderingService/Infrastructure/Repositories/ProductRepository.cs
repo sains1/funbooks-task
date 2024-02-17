@@ -23,4 +23,13 @@ public class ProductRepository : IProductRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.ProductId == id);
     }
+
+    public async Task<ICollection<Product>> GetProductsByIdBulkAsync(IEnumerable<Guid> ids)
+    {
+        Activity.Current?.AddEvent(new(nameof(ProductRepository) + nameof(GetProductsByIdBulkAsync)));
+
+        return await _dbContext.Products.AsNoTracking()
+            .Where(x => ids.Contains(x.ProductId))
+            .ToListAsync();
+    }
 }
