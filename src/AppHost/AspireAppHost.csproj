@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Membership\MembershipService\MembershipService.csproj" />
     <ProjectReference Include="..\Ordering\OrderingService\OrderingService.csproj" />
     <ProjectReference Include="..\Shared\ServiceDefaults\ServiceDefaults.csproj" IsAspireProjectResource="false" />
     <ProjectReference Include="..\Shipping\ShippingService\ShippingService.csproj" />
