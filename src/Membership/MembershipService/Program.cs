@@ -3,11 +3,12 @@ using System.Reflection;
 using MassTransit;
 
 using MembershipService.Application.MembershipEnrollment;
+using MembershipService.Infrastructure;
 using MembershipService.Infrastructure.Repositories;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.AddServiceDefaults();
+builder.AddServiceDefaults(x => x.AddSource(Otel.ActivitySource.Name));
 
 builder.Services.Configure<MassTransitHostOptions>(options =>
 {

@@ -16,7 +16,7 @@ using ShippingService.Services;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.AddServiceDefaults();
+builder.AddServiceDefaults(x => x.AddSource(Otel.ActivitySource.Name));
 
 builder.Services.Configure<MassTransitHostOptions>(options =>
 {

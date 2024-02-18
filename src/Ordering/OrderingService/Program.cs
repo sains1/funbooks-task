@@ -20,7 +20,7 @@ using SharedKernel.OpenApi;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add service defaults & Aspire components.
-builder.AddServiceDefaults();
+builder.AddServiceDefaults(x => x.AddSource(Otel.ActivitySource.Name));
 
 builder.Services.AddProblemDetails();
 builder.Services.AddOpenApiServices(Assembly.GetExecutingAssembly());
