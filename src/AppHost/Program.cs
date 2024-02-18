@@ -3,12 +3,13 @@ var builder = DistributedApplication.CreateBuilder(args);
 var slnDirectory = GetSolutionDirectory(Directory.GetCurrentDirectory());
 ArgumentException.ThrowIfNullOrEmpty(slnDirectory);
 
-builder.AddExecutable("temporal", "temporal", Directory.GetCurrentDirectory(), ["server", "start-dev", "--db-filename", slnDirectory + ".sqlite"]);
+var messaging = builder.AddRabbitMQContainer("rabbitmq", port: 5672, password: "rabbit");
 
 var db = builder.AddPostgresContainer("db", 5432, "postgres")
     .AddDatabase("funbooks");
 
 builder.AddProject<Projects.OrderingService>("orderingservice")
+    .WithReference(messaging)
     .WithReference(db);
 
 builder.Build().Run();

@@ -4,6 +4,6 @@ namespace OrderingService.Application.PurchaseOrders;
 
 public interface IPurchaseOrderRepository
 {
-    Task<bool> ExistsAsync(int customerId, int purchaseOrderNumber);
-    Task AddIfNotExistsAsync(PurchaseOrder purchaseOrder);
+    Task<bool> PurchaseOrderExistsAsync(int customerId, int purchaseOrderNumber);
+    Task AddPurchaseOrderAsync(PurchaseOrder purchaseOrder);
 }

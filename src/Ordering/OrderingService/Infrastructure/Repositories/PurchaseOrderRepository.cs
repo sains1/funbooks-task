@@ -15,22 +15,18 @@ public class PurchaseOrderRepository : IPurchaseOrderRepository
         _context = context;
     }
 
-    public async Task AddIfNotExistsAsync(PurchaseOrder purchaseOrder)
+    public async Task AddPurchaseOrderAsync(PurchaseOrder purchaseOrder)
     {
-        Activity.Current?.AddEvent(new(nameof(PurchaseOrderRepository) + nameof(AddIfNotExistsAsync)));
-
-        if (await ExistsAsync(purchaseOrder.CustomerId, purchaseOrder.PurchaseOrderNumber))
-        {
-            return;
-        }
+        Activity.Current?.AddEvent(new(nameof(PurchaseOrderRepository) + nameof(AddPurchaseOrderAsync)));
 
         _context.PurchaseOrders.Add(purchaseOrder);
+
         await _context.SaveChangesAsync();
     }
 
-    public async Task<bool> ExistsAsync(int customerId, int purchaseOrderNumber)
+    public async Task<bool> PurchaseOrderExistsAsync(int customerId, int purchaseOrderNumber)
     {
-        Activity.Current?.AddEvent(new(nameof(PurchaseOrderRepository) + nameof(ExistsAsync)));
+        Activity.Current?.AddEvent(new(nameof(PurchaseOrderRepository) + nameof(PurchaseOrderExistsAsync)));
 
         return await _context.PurchaseOrders.AsNoTracking()
             .AnyAsync(po => po.PurchaseOrderNumber == purchaseOrderNumber && po.CustomerId == customerId);

@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-using FluentValidation.Results;
-
 using Microsoft.AspNetCore.Mvc;
 
 using OrderingService.Application.PurchaseOrders.SubmitPurchaseOrder;
@@ -42,6 +40,7 @@ public class PurchaseOrderController : ControllerBase
         [FromServices] SubmitPurchaseOrderHandler handler,
         [FromHeader(Name = "X-Customer-ID")] int customerId) // In a realistic scenario this might come from a JWT or similar
     {
+
         var response = await handler.Handle(new SubmitPurchaseOrderCommand { CustomerId = customerId, PurchaseOrderNumber = purchaseOrderId, LineItems = body.LineItems });
 
         return response.Match<IActionResult>(

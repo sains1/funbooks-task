@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+
+using Microsoft.EntityFrameworkCore;
 
 using OrderingService.Domain;
 
@@ -11,6 +13,8 @@ public class OrderingDbContext(DbContextOptions<OrderingDbContext> options) : Db
     public DbSet<LineItem> LineItems => Set<LineItem>();
     public DbSet<Customer> Customers => Set<Customer>();
 
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("ordering");
@@ -18,5 +22,11 @@ public class OrderingDbContext(DbContextOptions<OrderingDbContext> options) : Db
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderingDbContext).Assembly);
 
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.AddInboxStateEntity();
+
+        modelBuilder.AddOutboxMessageEntity();
+
+        modelBuilder.AddOutboxStateEntity();
     }
 }

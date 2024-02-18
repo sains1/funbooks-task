@@ -2,12 +2,10 @@
 
 using OneOf;
 
-using SharedKernel.GenericResponses;
-
 namespace OrderingService.Application.SubmitPurchaseOrder;
 
 [GenerateOneOf]
-public partial class SubmitPurchaseOrderResponseTypes : OneOfBase<SubmitPurchaseOrderSuccess, ConflictResponse, ValidationResult, MissingProductResponse>
+public partial class SubmitPurchaseOrderResponseTypes : OneOfBase<SubmitPurchaseOrderSuccess, PurchaseOrderAlreadyExists, ValidationResult, MissingProductResponse>
 {
 }
 
@@ -20,5 +18,8 @@ public class SubmitPurchaseOrderSuccess
 
 public class MissingProductResponse
 {
+}
 
+public class PurchaseOrderAlreadyExists
+{
 }
