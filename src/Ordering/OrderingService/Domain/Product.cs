@@ -1,4 +1,6 @@
-﻿namespace OrderingService.Domain;
+﻿using OrderingService.Contracts.Events;
+
+namespace OrderingService.Domain;
 
 public class Product
 {

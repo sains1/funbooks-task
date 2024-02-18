@@ -7,8 +7,6 @@ using OrderingService.Domain;
 using OrderingService.Infrastructure.Repositories;
 using OrderingService.Tests.Setup;
 
-using static Google.Protobuf.Compiler.CodeGeneratorResponse.Types;
-
 namespace OrderingService.Tests.Infrastructure.Repositories;
 
 public class PurchaseOrderRepositoryTests : IAsyncLifetime, IClassFixture<OrderingDbContextFixture>
@@ -26,16 +24,16 @@ public class PurchaseOrderRepositoryTests : IAsyncLifetime, IClassFixture<Orderi
     public async Task ExistsAsync_WhenPurchaseOrderExists_ShouldReturnTrue(Fixture fixture)
     {
         // arrange
-        var (customer, po) = CreateTestOrder(fixture);
+        var (customer, po, product) = CreateTestOrder(fixture);
 
         var dbContext = _fixture.GetScopedDbContext();
 
-        dbContext.AddRange(customer, po);
+        dbContext.AddRange(customer, po, product);
 
         await dbContext.SaveChangesAsync();
 
         // act
-        var result = await _sut.ExistsAsync(po.CustomerId, po.PurchaseOrderNumber);
+        var result = await _sut.PurchaseOrderExistsAsync(po.CustomerId, po.PurchaseOrderNumber);
 
         // assert
         Assert.True(result);
@@ -45,16 +43,16 @@ public class PurchaseOrderRepositoryTests : IAsyncLifetime, IClassFixture<Orderi
     public async Task ExistsAsync_WhenPurchaseOrderExistsForADifferentCustomer_ShouldReturnFalse(Fixture fixture)
     {
         // arrange
-        var (customer, po) = CreateTestOrder(fixture);
+        var (customer, po, product) = CreateTestOrder(fixture);
 
         var dbContext = _fixture.GetScopedDbContext();
 
-        dbContext.AddRange(customer, po);
+        dbContext.AddRange(customer, po, product);
 
         await dbContext.SaveChangesAsync();
 
         // act
-        var result = await _sut.ExistsAsync(fixture.Create<int>(), po.PurchaseOrderNumber);
+        var result = await _sut.PurchaseOrderExistsAsync(fixture.Create<int>(), po.PurchaseOrderNumber);
 
         // assert
         Assert.False(result);
@@ -66,7 +64,7 @@ public class PurchaseOrderRepositoryTests : IAsyncLifetime, IClassFixture<Orderi
         // arrange
 
         // act
-        var result = await _sut.ExistsAsync(fixture.Create<int>(), fixture.Create<int>());
+        var result = await _sut.PurchaseOrderExistsAsync(fixture.Create<int>(), fixture.Create<int>());
 
         // assert
         Assert.False(result);
@@ -74,51 +72,49 @@ public class PurchaseOrderRepositoryTests : IAsyncLifetime, IClassFixture<Orderi
 
 
     [Theory, AutoData]
-    public async Task AddIfNotExistsAsync_WhenPurchaseOrderNotExists_ShouldAddNewPurchaseOrder(Fixture fixture)
+    public async Task AddPurchaseOrderAsync_WhenPurchaseOrderNotExists_ShouldAddNewPurchaseOrder(Fixture fixture)
     {
         // arrange
         var dbContext = _fixture.GetScopedDbContext();
-        var (customer, po) = CreateTestOrder(fixture);
+        var (customer, po, product) = CreateTestOrder(fixture);
 
-        // act
-        await _sut.AddIfNotExistsAsync(po);
-
-        // assert
-        var count = await dbContext.PurchaseOrders.CountAsync();
-        Assert.Equal(1, count);
-    }
-
-    [Theory, AutoData]
-    public async Task AddIfNotExistsAsync_WhenPurchaseOrderExists_ShouldNotAddPurchaseOrder(Fixture fixture)
-    {
-        // arrange
-        var dbContext = _fixture.GetScopedDbContext();
-        var (customer, po) = CreateTestOrder(fixture);
-
-        dbContext.AddRange(customer, po);
-
+        dbContext.AddRange(customer, product);
         await dbContext.SaveChangesAsync();
 
+        var count = await dbContext.PurchaseOrders.CountAsync();
+        Assert.Equal(0, count); // ensure we were initially at 0
+
         // act
-        await _sut.AddIfNotExistsAsync(po);
+        await _sut.AddPurchaseOrderAsync(po);
 
         // assert
-        var count = await dbContext.PurchaseOrders.CountAsync();
+        count = await dbContext.PurchaseOrders.CountAsync();
         Assert.Equal(1, count);
     }
 
-    private (Customer, PurchaseOrder) CreateTestOrder(Fixture fixture)
+    private (Customer, PurchaseOrder, Product) CreateTestOrder(Fixture fixture)
     {
         var customer = new Customer { CustomerId = fixture.Create<int>() };
+        var product = fixture.Build<Product>().Without(x => x.CreatedAt).Create();
+        var id = fixture.Create<int>();
         var po = new PurchaseOrder
         {
             CustomerId = customer.CustomerId,
-            Customer = customer,
-            PurchaseOrderNumber = fixture.Create<int>(),
-            TotalCost = fixture.Create<decimal>()
+            PurchaseOrderNumber = id,
+            TotalCost = fixture.Create<decimal>(),
+            LineItems = new List<LineItem>
+            {
+                new LineItem
+                {
+                    CustomerId = customer.CustomerId,
+                    ProductId = product.ProductId,
+                    PurchaseOrderNumber= id,
+                    Quantity = fixture.Create<int>()
+                }
+            }
         };
 
-        return (customer, po);
+        return (customer, po, product);
     }
 
 

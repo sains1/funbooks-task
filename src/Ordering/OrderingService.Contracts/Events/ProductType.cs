@@ -1,4 +1,4 @@
-﻿namespace OrderingService.Domain;
+﻿namespace OrderingService.Contracts.Events;
 
 public enum ProductType
 {

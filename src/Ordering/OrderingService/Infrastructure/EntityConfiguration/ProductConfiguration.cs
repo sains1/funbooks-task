@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+using OrderingService.Contracts.Events;
 using OrderingService.Domain;
 
 namespace OrderingService.Infrastructure.EntityConfiguration;
