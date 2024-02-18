@@ -30,7 +30,7 @@ namespace OrderingService.Infrastructure.Migrations
                     ExpirationTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Consumed = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Delivered = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastSequenceNumber = table.Column<long>(type: "bigint", nullable: true)
+                    LastSequenceNumber = table.Column<long>(type: "bigint", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -64,7 +64,7 @@ namespace OrderingService.Infrastructure.Migrations
                     DestinationAddress = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     ResponseAddress = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     FaultAddress = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    ExpirationTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ExpirationTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -81,7 +81,7 @@ namespace OrderingService.Infrastructure.Migrations
                     RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Delivered = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastSequenceNumber = table.Column<long>(type: "bigint", nullable: true)
+                    LastSequenceNumber = table.Column<long>(type: "bigint", nullable: true),
                 },
                 constraints: table =>
                 {
