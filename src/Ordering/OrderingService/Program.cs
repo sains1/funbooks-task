@@ -67,9 +67,9 @@ builder.Services.AddMassTransit(options =>
 
     options.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("localhost", h =>
+        cfg.Host(builder.Configuration["RabbitMq:Host"], h =>
         {
-            h.Password("rabbit");
+            h.Password(builder.Configuration["RabbitMq:Password"]);
         });
 
         cfg.ConfigureEndpoints(context);
@@ -80,6 +80,7 @@ var app = builder.Build();
 
 if (builder.Environment.IsDevelopment())
 {
+    // in a proper app I'd apply migrations in a pipeline, but this is fine for dev!
     var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
 
