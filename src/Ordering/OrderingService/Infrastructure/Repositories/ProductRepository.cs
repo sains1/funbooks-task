@@ -18,7 +18,7 @@ public class ProductRepository : IProductRepository
 
     public Task<Product?> GetProductOrNullAsync(Guid id)
     {
-        Activity.Current?.AddEvent(new (nameof(ProductRepository) + nameof(GetProductOrNullAsync)));
+        Activity.Current?.AddEvent(new(nameof(ProductRepository) + nameof(GetProductOrNullAsync)));
 
         return dbContext.Products
             .AsNoTracking()
@@ -27,7 +27,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<ICollection<Product>> GetProductsByIdBulkAsync(IEnumerable<Guid> ids)
     {
-        Activity.Current?.AddEvent(new (nameof(ProductRepository) + nameof(GetProductsByIdBulkAsync)));
+        Activity.Current?.AddEvent(new(nameof(ProductRepository) + nameof(GetProductsByIdBulkAsync)));
 
         return await dbContext.Products.AsNoTracking()
             .Where(x => ids.Contains(x.ProductId))

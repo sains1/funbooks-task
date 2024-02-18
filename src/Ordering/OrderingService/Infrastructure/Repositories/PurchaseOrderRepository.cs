@@ -18,7 +18,7 @@ public class PurchaseOrderRepository : IPurchaseOrderRepository
 
     public async Task AddPurchaseOrderAsync(PurchaseOrder purchaseOrder)
     {
-        Activity.Current?.AddEvent(new (nameof(PurchaseOrderRepository) + nameof(AddPurchaseOrderAsync)));
+        Activity.Current?.AddEvent(new(nameof(PurchaseOrderRepository) + nameof(AddPurchaseOrderAsync)));
 
         context.PurchaseOrders.Add(purchaseOrder);
 
@@ -27,7 +27,7 @@ public class PurchaseOrderRepository : IPurchaseOrderRepository
 
     public async Task<bool> PurchaseOrderExistsAsync(int customerId, int purchaseOrderNumber)
     {
-        Activity.Current?.AddEvent(new (nameof(PurchaseOrderRepository) + nameof(PurchaseOrderExistsAsync)));
+        Activity.Current?.AddEvent(new(nameof(PurchaseOrderRepository) + nameof(PurchaseOrderExistsAsync)));
 
         return await context.PurchaseOrders.AsNoTracking()
             .AnyAsync(po => po.PurchaseOrderNumber == purchaseOrderNumber && po.CustomerId == customerId);
