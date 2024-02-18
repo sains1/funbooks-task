@@ -60,7 +60,7 @@ public class SubmitPurchaseOrderHandlerTests
     }
 
     [Theory, AutoData]
-    public async Task WhenProductsAreMissing_MissingProductResponseIsReturned(SubmitPurchaseOrderCommand command, Fixture fixture)
+    public async Task WhenProductsAreMissing_MissingProductResponseIsReturned(SubmitPurchaseOrderCommand command)
     {
         // arrange
         _validator.ValidateAsync(command).Returns(Task.FromResult(new FluentValidation.Results.ValidationResult()));
