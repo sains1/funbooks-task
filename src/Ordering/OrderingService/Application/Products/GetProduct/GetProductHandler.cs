@@ -6,7 +6,7 @@ public class GetProductHandler(IProductRepository repository)
 {
     public async Task<ProductDto?> GetProductAsync(GetProductQuery query)
     {
-        Activity.Current?.AddEvent(new(nameof(GetProductHandler)));
+        Activity.Current?.AddEvent(new (nameof(GetProductHandler)));
 
         var result = await repository.GetProductOrNullAsync(query.ProductId);
 

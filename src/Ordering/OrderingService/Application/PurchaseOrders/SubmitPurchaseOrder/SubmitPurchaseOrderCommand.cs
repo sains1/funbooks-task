@@ -5,12 +5,15 @@ namespace OrderingService.Application.PurchaseOrders.SubmitPurchaseOrder;
 public class SubmitPurchaseOrderCommand
 {
     public required int CustomerId { get; set; }
+
     public required int PurchaseOrderNumber { get; set; }
+
     public required ICollection<ProductRequest> LineItems { get; set; }
 
     public class ProductRequest
     {
         public required Guid ProductId { get; set; }
+
         public required int Quantity { get; set; }
     }
 }

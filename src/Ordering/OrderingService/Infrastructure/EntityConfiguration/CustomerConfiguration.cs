@@ -25,7 +25,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             },
             new Customer
             {
-                CustomerId = 56789
+                CustomerId = 56789,
             });
     }
 }

@@ -30,22 +30,21 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
                 ProductId = new Guid("6831ee62-b099-44e7-b3e2-d2cd045cc2f5"),
                 ProductName = "The Girl on the Train",
                 Price = 9.99m,
-                Type = ProductType.Physical
+                Type = ProductType.Physical,
             },
             new Product
             {
                 ProductId = new Guid("1d217f91-bef1-4eb6-ada8-d9d36739c03e"),
                 ProductName = "Comprehensive First Aid Training",
                 Price = 19.99m,
-                Type = ProductType.Digital
+                Type = ProductType.Digital,
             },
             new Product
             {
                 ProductId = new Guid("3ea5f11d-c4ee-4f08-bdde-82559c7bd0af"),
                 ProductName = "Book Club",
                 Price = 29.99m,
-                Type = ProductType.Membership
-            }
-        );
+                Type = ProductType.Membership,
+            });
     }
 }

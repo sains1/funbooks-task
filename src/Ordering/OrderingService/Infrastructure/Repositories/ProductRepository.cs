@@ -9,26 +9,27 @@ namespace OrderingService.Infrastructure.Repositories;
 
 public class ProductRepository : IProductRepository
 {
-    private readonly OrderingDbContext _dbContext;
+    private readonly OrderingDbContext dbContext;
+
     public ProductRepository(OrderingDbContext dbContext)
     {
-        _dbContext = dbContext;
+        this.dbContext = dbContext;
     }
 
     public Task<Product?> GetProductOrNullAsync(Guid id)
     {
-        Activity.Current?.AddEvent(new(nameof(ProductRepository) + nameof(GetProductOrNullAsync)));
+        Activity.Current?.AddEvent(new (nameof(ProductRepository) + nameof(GetProductOrNullAsync)));
 
-        return _dbContext.Products
+        return dbContext.Products
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.ProductId == id);
     }
 
     public async Task<ICollection<Product>> GetProductsByIdBulkAsync(IEnumerable<Guid> ids)
     {
-        Activity.Current?.AddEvent(new(nameof(ProductRepository) + nameof(GetProductsByIdBulkAsync)));
+        Activity.Current?.AddEvent(new (nameof(ProductRepository) + nameof(GetProductsByIdBulkAsync)));
 
-        return await _dbContext.Products.AsNoTracking()
+        return await dbContext.Products.AsNoTracking()
             .Where(x => ids.Contains(x.ProductId))
             .ToListAsync();
     }

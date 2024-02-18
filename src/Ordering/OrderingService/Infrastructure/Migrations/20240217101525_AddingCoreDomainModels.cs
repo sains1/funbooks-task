@@ -25,7 +25,7 @@ namespace OrderingService.Infrastructure.Migrations
                 columns: table => new
                 {
                     CustomerId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                 },
                 constraints: table =>
                 {
@@ -42,7 +42,7 @@ namespace OrderingService.Infrastructure.Migrations
                     ProductName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                 },
                 constraints: table =>
                 {
@@ -57,7 +57,7 @@ namespace OrderingService.Infrastructure.Migrations
                     CustomerId = table.Column<int>(type: "integer", nullable: false),
                     PurchaseOrderNumber = table.Column<int>(type: "integer", nullable: false),
                     TotalCost = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                 },
                 constraints: table =>
                 {
@@ -79,7 +79,7 @@ namespace OrderingService.Infrastructure.Migrations
                     CustomerId = table.Column<int>(type: "integer", nullable: false),
                     PurchaseOrderNumber = table.Column<int>(type: "integer", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Quantity = table.Column<int>(type: "integer", nullable: false)
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -107,7 +107,7 @@ namespace OrderingService.Infrastructure.Migrations
                 values: new object[]
                 {
                     12345,
-                    56789
+                    56789,
                 });
 
             migrationBuilder.InsertData(
@@ -118,7 +118,7 @@ namespace OrderingService.Infrastructure.Migrations
                 {
                     { new Guid("1d217f91-bef1-4eb6-ada8-d9d36739c03e"), 19.99m, "Comprehensive First Aid Training", 1 },
                     { new Guid("3ea5f11d-c4ee-4f08-bdde-82559c7bd0af"), 29.99m, "Book Club", 2 },
-                    { new Guid("6831ee62-b099-44e7-b3e2-d2cd045cc2f5"), 9.99m, "The Girl on the Train", 0 }
+                    { new Guid("6831ee62-b099-44e7-b3e2-d2cd045cc2f5"), 9.99m, "The Girl on the Train", 0 },
                 });
 
             migrationBuilder.CreateIndex(

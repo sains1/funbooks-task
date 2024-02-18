@@ -12,7 +12,9 @@ public partial class SubmitPurchaseOrderResponseTypes : OneOfBase<SubmitPurchase
 public class SubmitPurchaseOrderSuccess
 {
     public required int CustomerId { get; set; }
+
     public required int PurchaseOrderNumber { get; set; }
+
     public required decimal TotalPrice { get; set; }
 }
 

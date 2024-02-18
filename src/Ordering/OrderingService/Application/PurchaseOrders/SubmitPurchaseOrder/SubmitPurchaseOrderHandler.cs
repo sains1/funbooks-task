@@ -51,8 +51,7 @@ public class SubmitPurchaseOrderHandler(IValidator<SubmitPurchaseOrderCommand> v
                 {
                     ProductId = x.ProductId,
                     Quantity = x.Quantity,
-                    ProductType = products[x.ProductId].Type
-
+                    ProductType = products[x.ProductId].Type,
                 }).ToList(),
         });
 
@@ -67,14 +66,14 @@ public class SubmitPurchaseOrderHandler(IValidator<SubmitPurchaseOrderCommand> v
                 PurchaseOrderNumber = command.PurchaseOrderNumber,
                 ProductId = x.ProductId,
                 Quantity = x.Quantity,
-            }).ToList()
+            }).ToList(),
         });
 
         return new SubmitPurchaseOrderSuccess
         {
             CustomerId = command.CustomerId,
             PurchaseOrderNumber = command.PurchaseOrderNumber,
-            TotalPrice = cost
+            TotalPrice = cost,
         };
     }
 }
