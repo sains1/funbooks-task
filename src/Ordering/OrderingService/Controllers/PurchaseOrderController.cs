@@ -26,9 +26,9 @@ public class PurchaseOrderController : ControllerBase
     /// - 56789
     ///
     /// Example product IDs:
-    /// - 6831ee62-b099-44e7-b3e2-d2cd045cc2f5
-    /// - 1d217f91-bef1-4eb6-ada8-d9d36739c03e
-    /// - 3ea5f11d-c4ee-4f08-bdde-82559c7bd0af.
+    /// - 6831ee62-b099-44e7-b3e2-d2cd045cc2f5 (physical product)
+    /// - 1d217f91-bef1-4eb6-ada8-d9d36739c03e (digital product)
+    /// - 3ea5f11d-c4ee-4f08-bdde-82559c7bd0af (membership product).
     /// </remarks>
     [HttpPost("{purchaseOrderId:int}")]
     [ProducesResponseType(typeof(SubmitPurchaseOrderSuccess), StatusCodes.Status201Created)]

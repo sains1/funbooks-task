@@ -12,6 +12,10 @@ builder.AddProject<Projects.OrderingService>("orderingservice")
     .WithReference(messaging)
     .WithReference(db);
 
+builder.AddProject<Projects.ShippingService>("shippingservice")
+    .WithReference(messaging)
+    .WithReference(db);
+
 builder.Build().Run();
 
 // recurse up the file tree until we find the solution file
