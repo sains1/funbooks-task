@@ -60,6 +60,6 @@ public class PurchaseOrderController : ControllerBase
     public class SubmitPurchaseOrderBody
     {
         [Required]
-        public ICollection<SubmitPurchaseOrderCommand.ProductRequest> LineItems { get; set; } =[];
+        public ICollection<SubmitPurchaseOrderCommand.ProductRequest> LineItems { get; set; } = [];
     }
 }

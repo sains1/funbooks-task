@@ -6,7 +6,8 @@ using OrderingService.Domain;
 
 namespace OrderingService.Infrastructure;
 
-public class OrderingDbContext(DbContextOptions<OrderingDbContext> options): DbContext(options)
+public class OrderingDbContext(DbContextOptions<OrderingDbContext> options)
+    : DbContext(options)
 {
     public DbSet<Product> Products => Set<Product>();
 
