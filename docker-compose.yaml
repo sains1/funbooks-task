@@ -10,5 +10,63 @@ services:
       - dbvolume:/var/lib/postgresql/data
       - ./.postgres/postgres-init.sql:/docker-entrypoint-initdb.d/postgres-init.sql
 
+  rabbitmq:
+    image: rabbitmq
+    command: rabbitmq-server
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: rabbit
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ordering:
+    image: ordering
+    build:
+      context: .
+      dockerfile: ./src/Ordering/OrderingService/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__OrderingDb: Host=postgresql;Port=5432;Database=funbooks;Username=postgres;Password=postgres;
+      RabbitMq__Host: rabbitmq
+      RabbitMq__Password: rabbit
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgresql:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+
+  shipping:
+    image: shipping
+    build:
+      context: .
+      dockerfile: ./src/Shipping/ShippingService/Dockerfile
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      ConnectionStrings__ShippingDb: Host=postgresql;Port=5432;Database=funbooks;Username=postgres;Password=postgres;
+      RabbitMq__Host: rabbitmq
+      RabbitMq__Password: rabbit
+    depends_on:
+      postgresql:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+
+  membership:
+    image: membership
+    build:
+      context: .
+      dockerfile: ./src/Membership/MembershipService/Dockerfile
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      RabbitMq__Host: rabbitmq
+      RabbitMq__Password: rabbit
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 volumes:
   dbvolume:
