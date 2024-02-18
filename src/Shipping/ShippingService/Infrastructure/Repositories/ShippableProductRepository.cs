@@ -15,6 +15,8 @@ public class ShippableProductRepository : IShippableProductRepository
 
     public async Task<IEnumerable<ShippableProduct>> GetShippableProductsBulkAsync(IEnumerable<Guid> productIds)
     {
+        using var activity = Otel.ActivitySource.StartActivity(nameof(GetShippableProductsBulkAsync));
+
         // no tests due to time constraints
         return await context.ShippableProducts.Where(x => productIds.Contains(x.ProductId)).ToListAsync();
     }

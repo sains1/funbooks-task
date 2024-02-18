@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 using OrderingService.Application.PurchaseOrders;
 using OrderingService.Domain;
@@ -18,7 +16,7 @@ public class PurchaseOrderRepository : IPurchaseOrderRepository
 
     public async Task AddPurchaseOrderAsync(PurchaseOrder purchaseOrder)
     {
-        Activity.Current?.AddEvent(new(nameof(PurchaseOrderRepository) + nameof(AddPurchaseOrderAsync)));
+        using var activity = Otel.ActivitySource.StartActivity(nameof(AddPurchaseOrderAsync));
 
         context.PurchaseOrders.Add(purchaseOrder);
 
@@ -27,7 +25,7 @@ public class PurchaseOrderRepository : IPurchaseOrderRepository
 
     public async Task<bool> PurchaseOrderExistsAsync(int customerId, int purchaseOrderNumber)
     {
-        Activity.Current?.AddEvent(new(nameof(PurchaseOrderRepository) + nameof(PurchaseOrderExistsAsync)));
+        using var activity = Otel.ActivitySource.StartActivity(nameof(PurchaseOrderExistsAsync));
 
         return await context.PurchaseOrders.AsNoTracking()
             .AnyAsync(po => po.PurchaseOrderNumber == purchaseOrderNumber && po.CustomerId == customerId);

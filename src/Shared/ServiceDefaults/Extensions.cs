@@ -12,9 +12,10 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class Extensions
 {
-    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder,
+        Action<TracerProviderBuilder> configureTracing)
     {
-        builder.ConfigureOpenTelemetry();
+        builder.ConfigureOpenTelemetry(configureTracing);
 
         builder.AddDefaultHealthChecks();
 
@@ -29,7 +30,8 @@ public static class Extensions
         return builder;
     }
 
-    public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder,
+        Action<TracerProviderBuilder> configureTracing)
     {
         builder.Logging.AddOpenTelemetry(logging =>
         {
@@ -53,7 +55,10 @@ public static class Extensions
 
                 tracing.AddAspNetCoreInstrumentation()
                        .AddGrpcClientInstrumentation()
-                       .AddHttpClientInstrumentation();
+                       .AddHttpClientInstrumentation()
+                       .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
+
+                configureTracing(tracing);
             });
 
         builder.AddOpenTelemetryExporters();
@@ -102,5 +107,6 @@ public static class Extensions
         meterProviderBuilder.AddMeter(
             "Microsoft.AspNetCore.Hosting",
             "Microsoft.AspNetCore.Server.Kestrel",
-            "System.Net.Http");
+            "System.Net.Http",
+            MassTransit.Monitoring.InstrumentationOptions.MeterName);
 }

@@ -15,6 +15,8 @@ public class CustomerAddressRepository : ICustomerAddressRepository
 
     public async Task<CustomerAddress> GetCustomerAddressAsync(int customerId)
     {
+        using var activity = Otel.ActivitySource.StartActivity(nameof(GetCustomerAddressAsync));
+
         // note - no tests due to time constraints
         return await context.CustomerAddresses.FirstAsync(x => x.CustomerId == customerId);
     }
