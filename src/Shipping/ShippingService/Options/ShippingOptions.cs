@@ -7,5 +7,5 @@ public class ShippingOptions
     public const string SectionName = nameof(ShippingOptions);
 
     [Required]
-    public string WarehouseEmailRecipient { get; set; }
+    public string WarehouseEmailRecipient { get; set; } = string.Empty;
 }
