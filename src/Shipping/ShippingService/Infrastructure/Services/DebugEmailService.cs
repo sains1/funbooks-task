@@ -5,7 +5,8 @@ using ShippingService.Services;
 namespace ShippingService.Infrastructure.Services;
 
 // debug service that prints emails to console instead of sending them
-public class DebugEmailService(ILogger<DebugEmailService> logger): IEmailService
+public class DebugEmailService(ILogger<DebugEmailService> logger)
+    : IEmailService
 {
     public Task Send(string email, string subject, string body)
     {
