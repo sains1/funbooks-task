@@ -6,8 +6,6 @@ using MembershipService.Application.MembershipEnrollment;
 using MembershipService.Infrastructure;
 using MembershipService.Infrastructure.Repositories;
 
-using SharedKernel.MassTransit;
-
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults(x => x.AddSource(Otel.ActivitySource.Name));
@@ -32,8 +30,6 @@ builder.Services.AddMassTransit(options =>
         {
             h.Password(builder.Configuration["RabbitMq:Password"]);
         });
-
-        cfg.UseExceptionLogger(Otel.ActivitySource);
 
         cfg.ConfigureEndpoints(context);
     });
